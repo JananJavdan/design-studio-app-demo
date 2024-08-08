@@ -1,7 +1,6 @@
 package com.project.demo.Services;
 
 import com.project.demo.Repositories.UserRepository;
-import com.project.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

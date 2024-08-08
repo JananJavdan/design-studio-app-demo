@@ -1,6 +1,5 @@
 package com.project.demo.Controller;
 
-import com.project.demo.model.User;
 import com.project.demo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

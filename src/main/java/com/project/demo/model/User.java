@@ -1,26 +1,18 @@
 package com.project.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
-import java.util.List;
-
-
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class User {
+@Data
+@MappedSuperclass
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userID;
-    private String username;
-    private String password;
-    private String email;
-    @OneToMany(mappedBy = "user")
-    private List<Design> savedDesigns;
-
-
+    protected Long id;
+    protected String name;
+    protected String email;
+    protected String password;
+    protected String phoneNumber;
+    @Enumerated(EnumType.STRING)
+    protected Role role;
 }
