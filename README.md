@@ -11,7 +11,7 @@ The Textile Design Application is a web-based platform designed to streamline th
 - ✉️ **Email Notifications**: Send confirmation and notification emails to users.
 
 ## Entity Relationships
-![Entity Class Diagram]![Entity Class Diagram](https://github.com/JananJavdan/demo-textiledesign-application/blob/main/Entity Class diagram-Pagina-4.jpg)
+![Entity Class Diagram]![Entity Class Diagram](https://github.com/JananJavdan/demo-textiledesign-application/blob/main/entity_class_diagram.png)
 
 
 - **User**: Attributes include id, name, email, password, phone number, and role.
