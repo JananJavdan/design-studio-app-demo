@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+
+actor Klant
+actor Admin
+actor DesignManager as "Design Manager"
+actor OrderManager as "Order Manager"
+
+Klant --> (login)
+Klant --> (Register)
+Klant --> (Update Account)
+Klant --> (Delete Account)
+Klant --> (select item of clothing)
+Klant --> (Upload logo)
+Klant --> (Customize design)
+Klant --> (Place an order)
+Klant --> (Provide Customer Support)
+Klant --> (View Ready-made Designs)
+
+Admin --> (login)
+Admin --> (Register)
+Admin --> (Update Account)
+Admin --> (Delete Account)
+
+DesignManager --> (Assist in Design Clothing)
+
+OrderManager --> (Manage Orders)
+OrderManager --> (Manage Product Catalog)
+OrderManager --> (Communicate Order Status)
+
+@enduml

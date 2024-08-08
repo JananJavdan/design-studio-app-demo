@@ -1,0 +1,98 @@
+@startuml
+enum Role {
+    ADMIN
+    CUSTOMER
+    DESIGN_MANAGER
+    ORDER_MANAGER
+}
+
+class User {
+    - id: Long
+    - name: String
+    - email: String
+    - password: String
+    - phoneNumber: String
+    - role: Role
+    + login(String, String): Boolean
+    + updateAccount(): void
+    + getRole(): Role
+}
+
+class Customer {
+    - customer_id: Long
+    - address: String
+    - registration_date: Date
+    + register(): void
+    + login(): void
+    + updateAccount(): void
+    + deleteAccount(): void
+    + viewOrderStatus(): void
+    + placeOrder(): void
+}
+
+class Admin {
+    + login(): void
+    + manageUsers(): void
+    + manageOrders(): void
+    + updateProductCatalog(): void
+}
+
+class DesignManager {
+    - designerManager_id: Long
+    - expertise: String
+    + createDesign(): void
+    + updateDesign(): void
+    + deleteDesign(): void
+    + fetchDesigns(): void
+    + assistCustomer(): void
+}
+
+class OrderManager {
+    - orderManager_id: Long
+    + placeOrder(): void
+    + updateOrderStatus(): void
+    + cancelOrder(): void
+    + fetchOrderDetails(): void
+    + communicateOrderStatus(): void
+}
+
+class Design {
+    - design_id: Long
+    - category: String
+    - color: String
+    - size: String
+    - logo: String
+    - customer_id: Long
+    - designer_id: Long
+    + selectItem(): void
+    + uploadLogo(): void
+    + customize(): void
+    + saveDesign(): void
+}
+
+class Order {
+    - id: Long
+    - design_id: Long
+    - customer_id: Long
+    - quantity: int
+    - total_price: float
+    - status: String
+    + placeOrder(): void
+    + updateStatus(): void
+    + cancelOrder(): void
+    + fetchOrderDetails(): void
+}
+
+class EmailService {
+    + sendConfirmationEmail(): void
+    + sendNotificationEmail(): void
+}
+
+User --> Role
+User <|-- Customer
+User <|-- Admin
+Customer "1" --* "0..*" Design : "one-to-many"
+Customer "1" --* "0..*" Order : "one-to-many"
+DesignManager "1" --* "0..*" Design : "one-to-many"
+OrderManager "1" --* "0..*" Order : "one-to-many"
+@enduml

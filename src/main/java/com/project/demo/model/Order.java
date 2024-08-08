@@ -11,17 +11,20 @@ public class Order {
     private Long id;
     private int quantity;
     private float totalPrice;
-    private String status;
+
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "design_id")
+    @JoinColumn(name = "design_id", referencedColumnName = "id")
     private Design design;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "order_manager_id")
+    @JoinColumn(name = "order_manager_id", referencedColumnName = "id")
     private OrderManager orderManager;
 }

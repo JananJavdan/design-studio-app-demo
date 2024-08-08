@@ -1,0 +1,9 @@
+@startuml SelectItemOfClothing
+|Select Item of Clothing|
+start
+:Customer selects clothing category;
+:System shows available items of clothing;
+:Customer selects item of clothing;
+:System shows details of selected garment;
+end
+@enduml

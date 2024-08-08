@@ -1,0 +1,15 @@
+@startuml Register
+|Register|
+start
+:Customer enters registration data;
+:System validates data;
+if (Is the information correct?) then (yes)
+    :Save data;
+    :System sends confirmation email;
+    :Show user dashboard;
+    end
+else (no)
+    :Show error message and let user re-enter data;
+    end
+endif
+@enduml

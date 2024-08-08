@@ -1,0 +1,10 @@
+@startuml DeleteAccount
+|Delete Account|
+start
+:Admin selects user account;
+:Admin chooses to delete account;
+:System confirms deletion;
+:System deletes account from database;
+:Show confirmation;
+end
+@enduml

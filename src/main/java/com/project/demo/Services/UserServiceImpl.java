@@ -1,6 +1,7 @@
 package com.project.demo.Services;
 
 import com.project.demo.Repositories.UserRepository;
+import com.project.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,19 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private UserRepository userRepository;
+
+
+    @Override
+    public User registerUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -22,26 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (!optionalUser.isPresent()) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return optionalUser.get();
-    }
-
-    @Override
-    public User saveUser(User user) {
+    public User updateUser(Long id, User user) {
+        user.setId(id);
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
 
-    @Override
-    public User getUserByUsername(String username) {
-        return userRepository.getUserByUsername(username);
     }
 }

@@ -1,0 +1,13 @@
+@startuml UploadLogo
+|Upload Logo|
+start
+:Customer uploads company logo;
+:System checks logo size and type;
+if (Is the logo size and type correct?) then (yes)
+    :Save the logo;
+    end
+else (no)
+    :Show error message and let user upload logo again;
+    end
+endif
+@enduml

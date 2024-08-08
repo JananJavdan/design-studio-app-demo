@@ -1,0 +1,17 @@
+@startuml UpdateAccount
+actor Customer
+participant System
+participant Database
+
+Customer -> System: Select account settings
+System -> Customer: Display account details
+Customer -> System: Update account details
+System -> Database: Validate new details
+Database --> System: Details valid?
+alt Details valid
+    System -> Database: Save new details
+    System -> Customer: Show confirmation
+else Details invalid
+    System -> Customer: Show error message
+end
+@enduml

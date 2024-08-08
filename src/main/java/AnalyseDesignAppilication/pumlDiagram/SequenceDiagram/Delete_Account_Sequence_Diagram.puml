@@ -1,0 +1,12 @@
+@startuml DeleteAccount
+actor Admin
+participant System
+participant Database
+
+Admin -> System: Select user account
+System -> Admin: Confirm deletion
+Admin -> System: Confirm deletion
+System -> Database: Delete account
+Database --> System: Account deleted
+System -> Admin: Show confirmation
+@enduml

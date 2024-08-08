@@ -1,0 +1,17 @@
+@startuml PlaceOrder
+|Place Order|
+start
+:Customer selects designed garment;
+:Customer chooses sizes, quantities, colors;
+:Customer enters payment details;
+:System validates payment details;
+if (Are the payment details correct?) then (yes)
+    :System processes payment;
+    :System saves order data;
+    :System sends confirmation email;
+    end
+else (no)
+    :Show error message and let user re-enter details;
+    end
+endif
+@enduml

@@ -1,0 +1,19 @@
+@startuml Login
+|Login|
+start
+:Customer enters login credentials;
+:System verifies login credentials;
+if (Are the login credentials correct?) then (yes)
+    :Show user dashboard;
+    end
+else (no)
+    :Show error message and increase error attempts;
+    if (Too many wrong attempts?) then (yes)
+        :Block the account and end;
+        end
+    else (no)
+        :Show user dashboard;
+        end
+    endif
+endif
+@enduml

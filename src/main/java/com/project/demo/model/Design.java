@@ -15,12 +15,12 @@ public class Design {
     private String logo;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "designer_id")
-    private DesignManager designer;
+    @JoinColumn(name = "designer_id", referencedColumnName = "id")
+    private DesignManager designManager;
 
 
 }

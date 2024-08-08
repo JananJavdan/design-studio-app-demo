@@ -1,0 +1,15 @@
+@startuml UpdateAccount
+|Update Account|
+start
+:Customer selects account settings;
+:Customer updates account details;
+:System validates new details;
+if (Are the details correct?) then (yes)
+    :Save new details;
+    :Show confirmation;
+    end
+else (no)
+    :Show error message and let user re-enter details;
+    end
+endif
+@enduml

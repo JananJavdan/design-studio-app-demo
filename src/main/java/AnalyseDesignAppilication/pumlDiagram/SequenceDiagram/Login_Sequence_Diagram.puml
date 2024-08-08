@@ -1,0 +1,22 @@
+@startuml Login
+actor Customer
+participant System
+participant Database
+
+Customer -> System: Enter login credentials
+System -> Database: Verify login credentials
+Database --> System: Credentials valid?
+alt Credentials valid
+    System -> Customer: Show user dashboard
+else Credentials invalid
+    System -> Customer: Show error message
+    loop Increase error attempts
+        Customer -> System: Retry login
+    end
+    alt Too many wrong attempts
+        System -> Customer: Block the account
+    else
+        System -> Customer: Show user dashboard
+    end
+end
+@enduml

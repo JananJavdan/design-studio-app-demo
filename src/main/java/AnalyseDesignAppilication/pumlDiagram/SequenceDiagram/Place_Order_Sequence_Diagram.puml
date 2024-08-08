@@ -1,0 +1,21 @@
+@startuml PlaceOrder
+actor Customer
+participant System
+participant Database
+participant PaymentGateway as "Payment Gateway"
+
+Customer -> System: Select designed garment
+System -> Database: Fetch design details
+Database --> System: Design details
+Customer -> System: Choose sizes, quantities, colors
+Customer -> System: Enter payment details
+System -> PaymentGateway: Validate payment details
+PaymentGateway --> System: Payment valid?
+alt Payment valid
+    System -> PaymentGateway: Process payment
+    System -> Database: Save order data
+    System -> Customer: Send confirmation email
+else Payment invalid
+    System -> Customer: Show error message
+end
+@enduml

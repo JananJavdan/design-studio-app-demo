@@ -1,0 +1,14 @@
+@startuml SelectItemOfClothing
+actor Customer
+participant System
+participant Database
+
+Customer -> System: Select clothing category
+System -> Database: Fetch available items
+Database --> System: Available items
+System -> Customer: Display available items
+Customer -> System: Select item of clothing
+System -> Database: Fetch details of selected item
+Database --> System: Item details
+System -> Customer: Show item details
+@enduml

@@ -1,0 +1,9 @@
+@startuml CustomizeDesign
+|Customize Design|
+start
+:Customer selects a saved design;
+:Customer customizes the design (color, logo, etc.);
+:System shows real-time preview of design;
+:User saves changes;
+end
+@enduml

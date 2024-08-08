@@ -1,0 +1,15 @@
+@startuml CustomizeDesign
+actor Customer
+participant System
+participant Database
+
+Customer -> System: Select saved design
+System -> Database: Fetch saved design
+Database --> System: Design details
+System -> Customer: Display design details
+Customer -> System: Customize design
+System -> Customer: Show real-time preview
+Customer -> System: Save changes
+System -> Database: Save customized design
+System -> Customer: Show confirmation
+@enduml

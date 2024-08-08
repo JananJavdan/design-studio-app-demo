@@ -1,0 +1,18 @@
+@startuml Register
+actor Customer
+participant System
+participant Database
+participant EmailService as "Email Service"
+
+Customer -> System: Enter registration data
+System -> Database: Validate data
+Database --> System: Data valid?
+alt Data valid
+    System -> Database: Save data
+    System -> EmailService: Send confirmation email
+    EmailService --> Customer: Confirmation email
+    System -> Customer: Show user dashboard
+else Data invalid
+    System -> Customer: Show error message
+end
+@enduml

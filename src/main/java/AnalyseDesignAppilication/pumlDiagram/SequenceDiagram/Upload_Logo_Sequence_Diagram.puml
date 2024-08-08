@@ -1,0 +1,15 @@
+@startuml UploadLogo
+actor Customer
+participant System
+participant Database
+
+Customer -> System: Upload company logo
+System -> System: Check logo size and type
+alt Logo valid
+    System -> Database: Save logo
+    System -> Customer: Logo saved
+else Logo invalid
+    System -> Customer: Show error message
+    Customer -> System: Retry upload
+end
+@enduml
