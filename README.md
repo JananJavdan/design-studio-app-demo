@@ -38,16 +38,4 @@ The Textile Design Application is a web-based platform designed to streamline th
 
 
 
-### Steps to Ensure Correct Path:
 
-1. **Ensure the Image is in the Correct Directory:**
-   - Place the `entity_class_diagram.png` image in the `assets` folder at the root of your project directory.
-
-2. **Add and Commit the Image and README.md:**
-   - Ensure that you add and commit both the image and the updated README.md file to your repository.
-
-```bash
-git add assets/entity_class_diagram.png
-git add README.md
-git commit -m "Add entity class diagram and update README"
-git push origin main
