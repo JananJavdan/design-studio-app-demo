@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class OrderManagerServiceImpl implements OrderManagerService{
-    @Autowired
+
     private OrderManagerRepository orderManagerRepository;
+    @Autowired
+    public OrderManagerServiceImpl(OrderManagerRepository orderManagerRepository){
+        this.orderManagerRepository = orderManagerRepository;
+    }
 
     @Override
     public OrderManager createOrderManager(OrderManager orderManager) {

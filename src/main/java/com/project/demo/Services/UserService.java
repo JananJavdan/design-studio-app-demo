@@ -1,5 +1,6 @@
 package com.project.demo.Services;
 
+import com.project.demo.model.Role;
 import com.project.demo.model.User;
 
 import java.util.List;
@@ -11,4 +12,7 @@ public interface UserService {
     List<User> getAllUsers();
     User updateUser(Long id, User user);
     void deleteUser(Long id);
+    boolean login(String email, String password);
+    Role getRole(Long id);
+
 }

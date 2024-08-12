@@ -1,6 +1,8 @@
 package com.project.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -9,22 +11,30 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    @Min(1)
     private int quantity;
+
+    @Column(nullable = false)
+    @Min(0)
     private float totalPrice;
 
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
     private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "design_id", referencedColumnName = "id")
+    @JoinColumn(name = "design_id", referencedColumnName = "id", nullable = false)
     private Design design;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "order_manager_id", referencedColumnName = "id")
+    @JoinColumn(name = "order_manager_id", referencedColumnName = "id", nullable = false)
     private OrderManager orderManager;
 }
