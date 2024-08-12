@@ -48,6 +48,9 @@ public class Design {
     @JoinColumn(name = "designer_id", referencedColumnName = "id", nullable = false)
     private DesignManager designManager;
 
+    @Column(nullable = false)
+    private boolean approved = false;
+
 
 
 

@@ -1,31 +1,42 @@
 package com.project.demo.Controller;
 
+import com.project.demo.Exceptions.OrderNotFoundException;
 import com.project.demo.Services.OrderService;
 import com.project.demo.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RestController
+@RequestMapping("/orders")
 public class OrderController {
+
+    private final OrderService orderService;
+
     @Autowired
-    private OrderService orderService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @PostMapping
     public ResponseEntity<Order> placeOrder(@RequestBody Order order) {
         Order newOrder = orderService.placeOrder(order);
-        return ResponseEntity.ok(newOrder);
+        return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getOrderById(id).orElseThrow(() -> new RuntimeException("Order not found")));
+        Order order = orderService.getOrderById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+        return ResponseEntity.ok(order);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order) {
-        return ResponseEntity.ok(orderService.updateOrder(id, order));
+        Order updatedOrder = orderService.updateOrder(id, order);
+        return ResponseEntity.ok(updatedOrder);
     }
 
     @DeleteMapping("/{id}")
@@ -36,6 +47,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
 }

@@ -2,10 +2,13 @@ package com.project.demo.Services;
 
 import com.project.demo.Repositories.OrderRepository;
 import com.project.demo.model.Order;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class OrderServiceImpl implements OrderService{
 
@@ -17,6 +20,10 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order placeOrder(Order order) {
+        if (order == null) {
+            throw new IllegalArgumentException("Order cannot be null");
+        }
+        // Additional validation logic can go here
         return orderRepository.save(order);
     }
 
@@ -26,14 +33,29 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order updateOrderStatus(Long id, Order order) {
-        order.setId(id);
-        return orderRepository.save(order);
+    public Optional<Order> getOrderById(Long id) {
+        return orderRepository.findById(id);
     }
 
     @Override
-    public void cancelOrder(Long id) {
-        orderRepository.deleteById(id);
-
+    @Transactional
+    public Order updateOrder(Long id, Order order) {
+        Optional<Order> existingOrder = orderRepository.findById(id);
+        if (!existingOrder.isPresent()) {
+            throw new RuntimeException("Order not found");
+        }
+        Order orderToUpdate = existingOrder.get();
+        orderToUpdate.setStatus(order.getStatus());
+        return orderRepository.save(orderToUpdate);
     }
+
+    @Override
+    @Transactional
+    public void deleteOrder(Long id) {
+        if (!orderRepository.existsById(id)) {
+            throw new RuntimeException("Order not found");
+        }
+        orderRepository.deleteById(id);
+    }
+
 }
