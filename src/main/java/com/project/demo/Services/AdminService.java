@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface AdminService {
     void login(String email, String password);
+    User registerAdmin(User admin);
     List<User> manageUsers();
-    List<Order> manageOrders();
-    void updateProductCatalog(Long productId, String productDetails);
+    void deleteUser(Long userId);
     void sendConfirmationEmail(Long userId, String message);
     void sendNotificationEmail(Long userId, String message);
 }

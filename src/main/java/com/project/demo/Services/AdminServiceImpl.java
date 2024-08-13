@@ -1,12 +1,12 @@
 package com.project.demo.Services;
 
-import com.project.demo.Repositories.AdminRepository;
-import com.project.demo.Repositories.OrderRepository;
 import com.project.demo.Repositories.UserRepository;
-import com.project.demo.model.Admin;
-import com.project.demo.model.Order;
+import com.project.demo.model.Role;
 import com.project.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +14,15 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService{
 
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender emailSender;
 
 
     @Autowired
-    public AdminServiceImpl(UserRepository userRepository, OrderRepository orderRepository) {
+    public AdminServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender emailSender) {
         this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailSender = emailSender;
     }
 
 
@@ -36,28 +38,39 @@ public class AdminServiceImpl implements AdminService{
         // Als de wachtwoorden overeenkomen, beschouw de gebruiker als ingelogd (dit is een simplificatie)
         System.out.println("Admin " + email + " logged in successfully");
     }
+    @Override
+    public User registerAdmin(User admin) {
+        // Ensure that the email is unique
+        if (userRepository.existsByEmail(admin.getEmail())) {
+            throw new RuntimeException("Email is already taken");
+        }
+
+        // Hash the password before saving
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+
+        admin.setRole(Role.ADMIN);
+
+        return userRepository.save(admin);
+    }
 
 
     @Override
     public List<User> manageUsers() {
-        return List.of();
+        return userRepository.findAll();
     }
 
     @Override
-    public List<Order> manageOrders() {
-        return orderRepository.findAll();
-    }
-
-    @Override
-        public void updateProductCatalog (Long productId, String productDetails){
-            // Je zou hier de logica implementeren om een product op te halen en bij te werken
-            // Bijvoorbeeld:
-            // Product product = productRepository.findById(productId)
-            //        .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
-            // product.setDetails(productDetails);
-            // productRepository.save(product);
-            System.out.println("Product with id " + productId + " updated with details: " + productDetails);
+    public void deleteUser(Long userId) {
+// Check if the user exists before deleting
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User not found with id " + userId);
         }
+        // Delete the user by ID
+        userRepository.deleteById(userId);
+        System.out.println("User with id " + userId + " has been deleted");
+
+    }
+
 
     @Override
     public void sendConfirmationEmail(Long userId, String message) {
@@ -75,16 +88,16 @@ public class AdminServiceImpl implements AdminService{
         sendEmail(user.getEmail(), "Notification", message);
     }
 
-    
 
     private void sendEmail(String recipientEmail, String subject, String message) {
-        // Dummy implementatie voor het verzenden van e-mails
-        // In een echte applicatie zou je hier gebruik maken van JavaMail API of een andere e-mailservice
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(recipientEmail);
+        email.setSubject(subject);
+        email.setText(message);
 
-        System.out.println("Sending email to: " + recipientEmail);
-        System.out.println("Subject: " + subject);
-        System.out.println("Message: " + message);
+        // Send the email
+        emailSender.send(email);
 
-        // Hier zou je bijvoorbeeld de JavaMail API aanroepen om daadwerkelijk een e-mail te sturen
+        System.out.println("Email sent to: " + recipientEmail);
     }
 }

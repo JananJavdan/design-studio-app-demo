@@ -18,5 +18,9 @@ public class OrderManager extends User{
     private String orderDetails;
     private OrderStatus orderStatus;
 
+    public OrderManager() {
+        this.setRole(Role.ORDER_MANAGER);
+    }
+
 
 }

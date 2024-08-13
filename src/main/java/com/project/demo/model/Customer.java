@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -18,7 +19,11 @@ public class Customer extends User{
 
     @NotNull
     @PastOrPresent
-    private Date registrationDate;
+    private LocalDate registrationDate;
+
+    public Customer() {
+        this.setRole(Role.CUSTOMER);
+    }
 
 
 }

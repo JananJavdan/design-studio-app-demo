@@ -15,4 +15,8 @@ public class DesignManager extends User{
     @OneToMany(mappedBy = "designManager")
     private List<Design> designs;
 
+    public DesignManager() {
+        this.setRole(Role.DESIGN_MANAGER);
+    }
+
 }
