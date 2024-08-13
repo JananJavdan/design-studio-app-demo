@@ -2,12 +2,14 @@ package com.project.demo.Controller;
 
 import com.project.demo.Services.OrderService;
 import com.project.demo.model.Order;
+import com.project.demo.model.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RestController
+@RequestMapping("/orderManager")
 public class OrderManagerController {
     @Autowired
     private OrderService orderService;
@@ -36,7 +38,7 @@ public class OrderManagerController {
     @PostMapping("/process-order/{id}")
     public ResponseEntity<Void> processOrder(@PathVariable Long id) {
         Order order = orderService.getOrderById(id).orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setStatus("Processed");
+        order.setStatus(OrderStatus.PROCESSING);
         orderService.updateOrder(id, order);
         return ResponseEntity.noContent().build();
     }
