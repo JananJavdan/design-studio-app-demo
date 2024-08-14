@@ -8,14 +8,13 @@ import java.util.List;
 @Data
 @Entity
 public class OrderManager extends User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @OneToMany(mappedBy = "orderManager")
     private List<Order> orders;
-
+    @Column
     private String orderDetails;
+    @Enumerated(EnumType.STRING)
+    @Column
     private OrderStatus orderStatus;
 
     public OrderManager() {

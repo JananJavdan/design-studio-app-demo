@@ -8,9 +8,6 @@ import java.util.List;
 @Data
 @Entity
 public class DesignManager extends User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @OneToMany(mappedBy = "designManager")
     private List<Design> designs;

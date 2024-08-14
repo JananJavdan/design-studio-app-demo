@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
-@MappedSuperclass
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,7 @@ public abstract class User {
     protected String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "role", insertable = false, updatable = false)
     @NotNull
     protected Role role;
 

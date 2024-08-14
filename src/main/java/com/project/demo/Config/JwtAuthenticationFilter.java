@@ -2,17 +2,15 @@ package com.project.demo.Config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.demo.model.AuthUser;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-import javax.servlet.FilterChain;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -25,7 +23,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         setAuthenticationManager(authenticationManager);
         this.jwtUtil = jwtUtil;
     }
-
 
 
     @Override
@@ -44,6 +41,21 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
             throw new RuntimeException(e);
         }
     }
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+        // Get the authenticated user
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
 
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user);
+
+        // Set the token in the response header (optional)
+        response.setHeader("Authorization", "Bearer " + token);
+
+        // Or return the token in the response body
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"token\": \"" + token + "\"}");
+    }
 
 }
