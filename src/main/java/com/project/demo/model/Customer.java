@@ -17,6 +17,12 @@ public class Customer extends User{
     @Size(min = 5, max = 100)
     private String address;
 
+    @Column(name = "failed_attempts")
+    private int failedAttempts = 0;
+
+    @Column(name = "account_locked")
+    private boolean accountLocked = false;
+
     @NotNull
     @PastOrPresent
     private LocalDate registrationDate;

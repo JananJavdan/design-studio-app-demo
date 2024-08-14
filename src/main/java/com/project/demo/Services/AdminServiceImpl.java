@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService{
                 .orElseThrow(() -> new RuntimeException("User not found with email " + email));
 
         // Vergelijk het ingevoerde wachtwoord met het opgeslagen wachtwoord (bijvoorbeeld door BCrypt te gebruiken)
-        if (!password.equals(user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
         // Als de wachtwoorden overeenkomen, beschouw de gebruiker als ingelogd (dit is een simplificatie)
@@ -47,16 +47,37 @@ public class AdminServiceImpl implements AdminService{
 
         // Hash the password before saving
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-
         admin.setRole(Role.ADMIN);
-
         return userRepository.save(admin);
     }
-
 
     @Override
     public List<User> manageUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User createUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email is already taken");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(Long userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setRole(updatedUser.getRole());
+        // Only update the password if it is provided
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+        return userRepository.save(existingUser);
     }
 
     @Override
@@ -86,6 +107,21 @@ public class AdminServiceImpl implements AdminService{
                 .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
 
         sendEmail(user.getEmail(), "Notification", message);
+    }
+
+    @Override
+    public User viewUserDetails(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+    }
+
+    @Override
+    public void unlockAccount(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        user.setAccountLocked(false);
+        user.setFailedAttempts(0);
+        userRepository.save(user);
     }
 
 

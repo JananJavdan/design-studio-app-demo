@@ -37,4 +37,10 @@ public abstract class User {
     @NotNull
     protected Role role;
 
+    @Column(nullable = false)
+    protected boolean accountLocked = false;
+
+    @Column(nullable = false)
+    protected int failedAttempts = 0;
+
 }
