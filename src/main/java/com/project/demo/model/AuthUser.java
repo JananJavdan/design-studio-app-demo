@@ -5,7 +5,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AuthUser extends User{
-
+    private String email;
+    private String password;
     public AuthUser() {
     }
 

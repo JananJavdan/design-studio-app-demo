@@ -15,4 +15,5 @@ public interface DesignService {
     void uploadLogo(Long designId, String logo);
     void customize(Long designId, String customizationDetails, String customizationValue);
     void saveDesign(Long designId);
+    byte[] generatePreview(Long designId);
 }

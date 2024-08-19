@@ -1,4 +1,4 @@
-package com.project.demo.Config;
+package com.project.demo.Security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.demo.model.AuthUser;
@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import java.io.IOException;
@@ -24,35 +25,33 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         this.jwtUtil = jwtUtil;
     }
 
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            // Parse the credentials from the request using the AuthUser subclass
             AuthUser creds = new ObjectMapper().readValue(request.getInputStream(), AuthUser.class);
-
-            // Create an authentication token with the parsed credentials
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword(), Collections.emptyList());
 
-            // Use the authentication manager to authenticate the token
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            throw new RuntimeException("Invalid login request", e);
         }
     }
+
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        // Get the authenticated user
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
 
-        // Generate JWT token
+        UserDetails user = (UserDetails) authResult.getPrincipal();
+
+        // Genereer JWT token
         String token = jwtUtil.generateToken(user);
 
-        // Set the token in the response header (optional)
+        // Zet de token in de response header (optioneel)
         response.setHeader("Authorization", "Bearer " + token);
 
-        // Or return the token in the response body
+        // Of retourneer de token in de response body
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"token\": \"" + token + "\"}");
