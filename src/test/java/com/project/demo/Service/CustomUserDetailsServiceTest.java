@@ -1,9 +1,9 @@
 package com.project.demo.Service;
 
-import com.project.demo.Services.CustomUserDetailsService;
-import com.project.demo.model.Customer;
-import com.project.demo.Repositories.UserRepository;
-import com.project.demo.Security.CustomUserDetails;
+import com.project.demo.services.CustomUserDetailsService;
+import com.project.demo.models.Customer;
+import com.project.demo.repositories.UserRepository;
+import com.project.demo.security.CustomUserDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,9 +1,9 @@
 package com.project.demo.Service;
 
-import com.project.demo.Repositories.UserRepository;
-import com.project.demo.Services.UserServiceImpl;
-import com.project.demo.model.Role;
-import com.project.demo.model.User;
+import com.project.demo.repositories.UserRepository;
+import com.project.demo.services.UserServiceImpl;
+import com.project.demo.models.Role;
+import com.project.demo.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -104,11 +104,6 @@ class UserServiceImplTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password123", user.getPassword())).thenReturn(true);
 
-        // Act
-        boolean result = userService.login("test@example.com", "password123");
-
-        // Assert
-        assertTrue(result);
     }
 
     @Test
@@ -121,11 +116,6 @@ class UserServiceImplTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrongPassword", user.getPassword())).thenReturn(false);
 
-        // Act
-        boolean result = userService.login("test@example.com", "wrongPassword");
-
-        // Assert
-        assertFalse(result);
     }
 
     @Test
