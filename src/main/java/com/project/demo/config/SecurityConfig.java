@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,11 +35,17 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("users/login", "/users/register", "/users/confirm").permitAll()
+                        .requestMatchers("users/login", "/users/register", "/users/confirm", "/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                        .oauth2Login(oauth2 -> oauth2
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/home", true)
+                        )
+
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+
 
 
         return http.build();

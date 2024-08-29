@@ -59,6 +59,8 @@ public abstract class User {
 
     private boolean isEnabled = false;
 
+    private String resetToken;
+
     public User() {
     }
 }

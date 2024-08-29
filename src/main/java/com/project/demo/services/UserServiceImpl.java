@@ -17,6 +17,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.project.demo.repositories.UserRepository;
+import com.project.demo.config.ResetPasswordRequest;
+
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +33,15 @@ public class UserServiceImpl implements UserService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
+    private EmailService emailService;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, CustomerRepository customerRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, CustomerRepository customerRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.customerRepository = customerRepository;
+        this.emailService = emailService;
     }
 
 
@@ -93,10 +99,59 @@ public class UserServiceImpl implements UserService {
             System.err.println("Kon de e-mail niet verzenden: " + ex.getMessage());
         }
     }
+   // public void sendPasswordResetToken(String email) {
+
+      //  String token = UUID.randomUUID().toString();
+        //sendEmailWithResetToken(email, token);
+    //}
+
+    private void sendEmailWithResetToken(String email, String token) {
+        String resetUrl = "http://localhost:4200/reset-password?token=" + token;
+        // Code om de e-mail te versturen (gebruik bijvoorbeeld een e-mailservice zoals JavaMailSender)
+        System.out.println("Reset URL: " + resetUrl);
+    }
+    public boolean resetPassword(String token, String newPassword) {
+        // Zoek de gebruiker op basis van het token
+        Optional<User> optionalUser = userRepository.findByResetToken(token);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // Reset het wachtwoord en verwijder het token
+            user.setPassword(newPassword);
+            user.setResetToken(null);
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isTokenValid(String token) {
+        // Voeg hier de logica toe om te controleren of het token nog geldig is
+        return true;
+    }
+    public void sendPasswordResetToken(String email) {
+        // Zoek de gebruiker op basis van het e-mailadres
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // Genereer een reset token
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            userRepository.save(user);
+
+            // Stuur het reset token naar de gebruiker via e-mail
+            emailService.sendResetPasswordEmail(user.getEmail(), token);
+        }
+    }
+
+
+
 
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+        
     }
 
     @Override

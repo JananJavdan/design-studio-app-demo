@@ -14,6 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import com.project.demo.config.ResetPasswordRequest;
+
+
+
 
 import java.util.Optional;
 
@@ -75,6 +79,21 @@ public class UserController {
         }
 
         return ResponseEntity.ok("User confirmed successfully");
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody String email) {
+        userService.sendPasswordResetToken(email);
+        return ResponseEntity.ok("Password reset link has been sent to your email.");
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestBody ResetPasswordRequest request) {
+        boolean isReset = userService.resetPassword(token, request.getNewPassword());
+        if (isReset) {
+            return ResponseEntity.ok("Password has been reset successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid or expired token.");
+        }
     }
 
 

@@ -16,5 +16,6 @@ public interface UserService {
     Optional<User> login(String email, String password);
     Role getRole(Long id);
     Optional<User> confirmUser(String token);
-
+    void sendPasswordResetToken(String email);
+    boolean resetPassword(String token, String newPassword);
 }
