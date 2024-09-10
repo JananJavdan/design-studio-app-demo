@@ -1,10 +1,15 @@
 package com.project.demo.services;
 
 import com.project.demo.exceptions.DesignNotFoundException;
+import com.project.demo.models.Customer;
+import com.project.demo.repositories.CustomerRepository;
 import com.project.demo.repositories.DesignRepository;
 import com.project.demo.models.Design;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,6 +21,12 @@ import java.io.ByteArrayOutputStream;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Font;
+import java.nio.file.Files;  // For file operations
+import java.nio.file.Path;  // For representing file paths
+import java.nio.file.Paths;  // For manipulating paths
+import java.util.UUID;  // For generating unique file names
+
+
 
 @Service
 public class DesignServiceImpl implements DesignService{
@@ -25,10 +36,81 @@ public class DesignServiceImpl implements DesignService{
     public DesignServiceImpl(DesignRepository designRepository){
         this.designRepository = designRepository;
     }
+    @Autowired
+    private DesignManagerService designManagerService;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerService customerService;
+
+    private final String uploadDirectory = "C:/Users/Siamak/IdeaProjects/demo-textiledesign-application/uploads";
+
+    public String saveImage(MultipartFile image) {
+        String directory = "C:/Users/Siamak/IdeaProjects/demo-textiledesign-application/uploads";
+        File directoryFile = new File(directory);
+
+
+        if (!directoryFile.exists()) {
+            directoryFile.mkdirs();
+        }
+
+        try {
+            String uniqueFilename = UUID.randomUUID().toString() + "-" + image.getOriginalFilename();
+            Path path = Paths.get(directory + File.separator + uniqueFilename);
+            Files.write(path, image.getBytes());
+            return path.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image", e);
+        }
+    }
+
+
+    public Design createDesign(String color, String font, MultipartFile image, Long customerId) {
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+
+        String imageUrl = saveImage(image);
+
+
+        Design design = new Design();
+        design.setColor(color);
+        design.setFont(font);
+        design.setImageUrl(imageUrl);
+        design.setCustomer(customer);
+
+        return designRepository.save(design);
+    }
+
+
+
+    @Override
+    public List<Design> findByCustomer_Id(Long customerId) {
+        return designRepository.findByCustomer_Id(customerId);
+    }
+
+    @Override
+    public List<Design> findDesignsByCustomerEmail(String customerEmail) {
+        return designRepository.findByCustomerEmail(customerEmail);
+    }
+
+    public List<Design> getDesignsByCustomerId(Long customerId) {
+        return designRepository.findByCustomer_Id(customerId);
+    }
+
+
     @Override
     public Design createDesign(Design design) {
         return designRepository.save(design);
     }
+
+
+    @Override
+    public Design saveDesign(Design design) {
+        return designRepository.save(design);
+    }
+
 
     @Override
     public Optional<Design> getDesignById(Long id) {
@@ -162,4 +244,14 @@ public class DesignServiceImpl implements DesignService{
         return baos.toByteArray();
 
     }
-}
+
+    @Override
+    public List<Design> getDesignsByCustomerName(String name) {
+        return designRepository.findByCustomerName(name);
+    }
+
+
+    }
+
+
+

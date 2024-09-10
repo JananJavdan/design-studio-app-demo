@@ -28,6 +28,9 @@ public class Design {
     @Column(nullable = true, length = 255)
     private String logo;
 
+    @Column(name = "image_url", length = 255)
+    private String imageUrl;
+
     @NotBlank(message = "Text cannot be blank")
     @Size(max = 255, message = "Text cannot exceed 255 characters")
     private String text;
@@ -45,7 +48,7 @@ public class Design {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "designer_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "design_manager_id", referencedColumnName = "id", nullable = false)
     private DesignManager designManager;
 
     @Column(nullable = false)

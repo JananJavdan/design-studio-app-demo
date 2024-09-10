@@ -18,4 +18,8 @@ public interface UserService {
     Optional<User> confirmUser(String token);
     void sendPasswordResetToken(String email);
     boolean resetPassword(String token, String newPassword);
+    void sendPasswordResetToken(String email, String token);
+    Optional<User> getUserByResetToken(String token);
+    void save(User user);
+    Optional<User> findByEmail(String email);
 }

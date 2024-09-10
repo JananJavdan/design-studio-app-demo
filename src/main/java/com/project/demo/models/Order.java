@@ -27,15 +27,15 @@ public class Order {
     @NotNull
     private OrderStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "design_id", referencedColumnName = "id", nullable = false)
     private Design design;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_manager_id", referencedColumnName = "id", nullable = false)
     private OrderManager orderManager;
 }

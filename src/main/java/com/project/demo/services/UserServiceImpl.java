@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final JavaMailSender mailSender;
     private EmailService emailService;
 
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JavaMailSender mailSender, CustomerRepository customerRepository, EmailService emailService) {
         this.userRepository = userRepository;
@@ -69,8 +70,12 @@ public class UserServiceImpl implements UserService {
         User registeredUser = userRepository.save(user);
         System.out.println("User saved with email: " + registeredUser.getEmail());
 
-        // Send confirmation email
-        sendConfirmationEmail(user);
+        // Probeer de bevestigingsmail te verzenden en log een fout als het mislukt, zonder de flow te onderbreken
+        try {
+            sendConfirmationEmail(user);
+        } catch (Exception e) {
+            System.err.println("Kon de bevestigingsmail niet verzenden: " + e.getMessage());
+        }
 
         return registeredUser;
     }
@@ -82,6 +87,7 @@ public class UserServiceImpl implements UserService {
                 + "<p>Bedankt voor uw registratie bij ons. Om uw account te activeren, klikt u op de volgende link:</p>"
                 + "<p><a href=\"" + confirmationUrl + "\">Bevestig uw registratie</a></p>"
                 + "<br>"
+                + "<img src=\"https://raw.githubusercontent.com/JananJavdan/my-images-repo/main/design%20studio.png\" alt=\"Design Studio Logo\">\n"
                 + "<p>Met vriendelijke groeten,</p>"
                 + "<p><strong>TEXTILE DESIGN APPILICATIE</strong></p>";
 
@@ -99,59 +105,21 @@ public class UserServiceImpl implements UserService {
             System.err.println("Kon de e-mail niet verzenden: " + ex.getMessage());
         }
     }
-   // public void sendPasswordResetToken(String email) {
 
-      //  String token = UUID.randomUUID().toString();
-        //sendEmailWithResetToken(email, token);
-    //}
-
-    private void sendEmailWithResetToken(String email, String token) {
-        String resetUrl = "http://localhost:4200/reset-password?token=" + token;
-        // Code om de e-mail te versturen (gebruik bijvoorbeeld een e-mailservice zoals JavaMailSender)
-        System.out.println("Reset URL: " + resetUrl);
-    }
-    public boolean resetPassword(String token, String newPassword) {
-        // Zoek de gebruiker op basis van het token
-        Optional<User> optionalUser = userRepository.findByResetToken(token);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            // Reset het wachtwoord en verwijder het token
-            user.setPassword(newPassword);
-            user.setResetToken(null);
-            userRepository.save(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     private boolean isTokenValid(String token) {
         // Voeg hier de logica toe om te controleren of het token nog geldig is
         return true;
     }
-    public void sendPasswordResetToken(String email) {
-        // Zoek de gebruiker op basis van het e-mailadres
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            // Genereer een reset token
-            String token = UUID.randomUUID().toString();
-            user.setResetToken(token);
-            userRepository.save(user);
-
-            // Stuur het reset token naar de gebruiker via e-mail
-            emailService.sendResetPasswordEmail(user.getEmail(), token);
-        }
-    }
-
-
 
 
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
         
+    }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -162,6 +130,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+    public void save(User user) {
+        userRepository.save(user);
     }
 
     @Override
@@ -195,8 +166,7 @@ public class UserServiceImpl implements UserService {
             User user = userOptional.get();
             System.out.println("User found: " + user.getEmail());
 
-            // Gebruik 'password' als het platte tekst wachtwoord dat de gebruiker invoert,
-            // en 'user.getPassword()' om het gehashte wachtwoord uit de database te krijgen.
+
             if (passwordEncoder.matches(password, user.getPassword())) {
                 System.out.println("Password match for user: " + user.getEmail());
                 return Optional.of(user);
@@ -211,8 +181,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Override
     public Role getRole(Long id) {
         return userRepository.findById(id)
@@ -225,25 +193,80 @@ public class UserServiceImpl implements UserService {
         // Find the user by the confirmation token
         Optional<User> userOptional = userRepository.findByConfirmationToken(token);
 
-        // If no user is found with the provided token, return an empty Optional
         if (!userOptional.isPresent()) {
             return Optional.empty();
         }
 
-        // Retrieve the user
         User user = userOptional.get();
 
-        // Enable the user account and clear the confirmation token
         user.setEnabled(true);
         user.setConfirmationToken(null);
 
-        // Save the updated user back to the repository
         userRepository.save(user);
 
-        // Return the confirmed user
         return Optional.of(user);
+    }
+
+    @Override
+    public void sendPasswordResetToken(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String token = UUID.randomUUID().toString(); // Genereer een uniek token
+            user.setResetToken(token);
+            userRepository.save(user); // Sla de gebruiker op met het reset-token
+            System.out.println("Generated Token: " + token + " for email: " + user.getEmail());
+            // Stuur de e-mail met de reset link
+            emailService.sendResetPasswordEmail(user);
+        } else {
+            // Optioneel: Log of handel het geval dat de gebruiker niet gevonden wordt
+            System.out.println("User not found with email: " + email);
+        }
     }
 
 
 
+
+    public boolean resetPassword(String token, String newPassword) {
+        // Zoek de gebruiker op basis van het token
+        Optional<User> optionalUser = userRepository.findByResetToken(token);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // Reset het wachtwoord en verwijder het token
+            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setResetToken(null);
+            userRepository.save(user);
+            System.out.println("Password reset successfully for user: " + user.getEmail());
+            return true;
+        } else {
+            System.out.println("Invalid token: " + token);
+            return false;
+        }
+    }
+
+    @Override
+    public void sendPasswordResetToken(String email, String token) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+
+            user.setResetToken(token);
+            userRepository.save(user);
+
+
+            emailService.sendResetPasswordEmail(user);
+        }
+    }
+
+    @Override
+    public Optional<User> getUserByResetToken(String token) {
+        return userRepository.findByResetToken(token);
+    }
+
+
 }
+
+
+

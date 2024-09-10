@@ -9,14 +9,21 @@ import com.project.demo.models.Design;
 import com.project.demo.models.DesignManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class DesignManagerServiceImpl implements DesignManagerService {
 
     private final DesignManagerRepository designManagerRepository;
     private final DesignRepository designRepository;
     private final CustomerRepository customerRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(DesignManagerServiceImpl.class);
+
 
     @Autowired
     public DesignManagerServiceImpl(DesignManagerRepository designManagerRepository, DesignRepository designRepository, CustomerRepository customerRepository) {
@@ -33,6 +40,7 @@ public class DesignManagerServiceImpl implements DesignManagerService {
         design.setDesignManager(designManager);
         return designRepository.save(design);
     }
+
 
     @Override
     public Design updateDesign(Long designManagerId, Long designId, Design updatedDesign) {
@@ -84,4 +92,12 @@ public class DesignManagerServiceImpl implements DesignManagerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found with id " + customerId));
     }
+
+    @Override
+    public Optional<DesignManager> findById(Long designManagerId) {
+        log.debug("Looking for DesignManager with ID: {}", designManagerId);
+        return designManagerRepository.findById(designManagerId);
+    }
+
+
 }

@@ -29,18 +29,18 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-     try {
-        ObjectMapper mapper = new ObjectMapper();
-        User user = mapper.readValue(request.getInputStream(), User.class);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                user.getEmail(),
-                user.getPassword()
-        );
-        return getAuthenticationManager().authenticate(authenticationToken);
-    } catch (IOException e) {
-        throw new RuntimeException("Invalid login request", e);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            User user = mapper.readValue(request.getInputStream(), User.class);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    user.getEmail(),
+                    user.getPassword()
+            );
+            return getAuthenticationManager().authenticate(authenticationToken);
+        } catch (IOException e) {
+            throw new RuntimeException("Invalid login request", e);
+        }
     }
-}
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {

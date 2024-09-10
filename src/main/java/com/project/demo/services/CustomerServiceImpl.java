@@ -148,5 +148,9 @@ public class CustomerServiceImpl implements CustomerService{
         return Optional.empty();
     }
 
+    public Optional<Customer> findCustomerByUsername(String username) {
+        return customerRepository.findByUsername(username)
+                .filter(user -> user.getRole().equals("CUSTOMER"));
+    }
 }
 

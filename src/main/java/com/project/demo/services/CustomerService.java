@@ -14,4 +14,5 @@ public interface CustomerService {
     Customer createCustomer(Customer customer);
     boolean existsByEmail(String email);
     Optional<Customer> findByEmailAndPassword(String email, String password);
+    Optional<Customer> findCustomerByUsername(String username);
 }

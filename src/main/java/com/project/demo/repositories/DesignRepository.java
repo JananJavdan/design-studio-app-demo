@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface DesignRepository extends JpaRepository<Design, Long> {
     List<Design> findByDesignManager(DesignManager designManager);
+    List<Design> findByCustomerName(String name);
+    List<Design> findByCustomer_Id(Long customerId);
+    List<Design> findByCustomerEmail(String email);
 }
