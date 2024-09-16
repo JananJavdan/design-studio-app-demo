@@ -1,0 +1,47 @@
+[33mcommit 3881ea0cdb75ee24185d018efd0b78cfe63c757c[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Tue Sep 10 18:23:49 2024 +0200
+
+    lastste update
+
+[33mcommit 1ddeecbc704c9c2bb6ae2f5fd9373d0ee178cded[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Thu Aug 29 16:01:34 2024 +0200
+
+    forgot password, reset password
+
+[33mcommit 8eed2a2e596b0de945bdd473a3a2b3283941cd30[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Wed Aug 28 15:36:01 2024 +0200
+
+    register en login pagina fixed
+
+[33mcommit 41a7dc8c73f5a2a28197f82ca1dc5c71da8ecd55[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Mon Aug 19 13:33:29 2024 +0200
+
+    spring security
+
+[33mcommit 38c3b10a08dcb95ac6640d2cd7b99b2088932931[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Wed Aug 14 11:57:01 2024 +0200
+
+    Update databae en JWT
+
+[33mcommit edb284e569f5bc7f923174aadd57e721d4b402a9[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Tue Aug 13 13:07:48 2024 +0200
+
+    new update
+
+[33mcommit 88d580145de3e4a42a8d792f1d4d9078746845d0[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Mon Aug 12 14:47:46 2024 +0200
+
+    add database with docker
+
+[33mcommit d7017eea8bead5f1e2a6a46ebdbfc2e0eac0977d[m
+Author: Janan <fatemeh.javdan@student.intecbrussel.be>
+Date:   Thu Aug 8 09:50:21 2024 +0200
+
+    first commit

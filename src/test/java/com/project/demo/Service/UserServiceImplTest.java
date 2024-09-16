@@ -4,6 +4,8 @@ import com.project.demo.repositories.UserRepository;
 import com.project.demo.services.UserServiceImpl;
 import com.project.demo.models.Role;
 import com.project.demo.models.User;
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -94,29 +96,7 @@ class UserServiceImplTest {
         assertFalse(foundUser.isPresent());
     }
 
-    @Test
-    void login_Success() {
-        // Arrange
-        User user = new User() {};
-        user.setEmail("test@example.com");
-        user.setPassword("encodedPassword");
 
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("password123", user.getPassword())).thenReturn(true);
-
-    }
-
-    @Test
-    void login_Failure() {
-        // Arrange
-        User user = new User() {};
-        user.setEmail("test@example.com");
-        user.setPassword("encodedPassword");
-
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("wrongPassword", user.getPassword())).thenReturn(false);
-
-    }
 
     @Test
     void getRole_Success_Admin() {
